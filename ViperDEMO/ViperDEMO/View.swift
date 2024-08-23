@@ -7,16 +7,16 @@
 
 import UIKit
 
-// Has reference to Presenter.
 protocol AnyView {
     var presenter: AnyPresenter? { get set }
     
     func update(with users: [User])
-    
     func update(with error: String)
 }
 
-class UserViewController : UIViewController, AnyView, UITableViewDelegate, UITableViewDataSource {
+class UserViewController: UIViewController, AnyView, UITableViewDelegate, UITableViewDataSource {
+    
+    // MARK: - UI Elements
     let usersTableView: UITableView = {
         let tableView = UITableView()
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
@@ -31,24 +31,40 @@ class UserViewController : UIViewController, AnyView, UITableViewDelegate, UITab
         return label
     }()
     
+    // MARK: - Properties
     var presenter: (any AnyPresenter)?
-    
     var users: [User] = []
     
+    // MARK: - Lifecycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        setupUI()
+        setupTableView()
         
-        view.addSubview(usersTableView)
-        view.addSubview(errorLabel)
-        
-        usersTableView.delegate = self
-        usersTableView.dataSource = self
+        self.title = "UserList"
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        layoutUI()
+    }
+    
+    // MARK: - Setup Methods
+    private func setupUI() {
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationItem.largeTitleDisplayMode = .always
         
+        view.backgroundColor = .systemBackground
+        view.addSubview(usersTableView)
+        view.addSubview(errorLabel)
+    }
+    
+    private func setupTableView() {
+        usersTableView.delegate = self
+        usersTableView.dataSource = self
+    }
+    
+    private func layoutUI() {
         // Set table layout
         usersTableView.frame = view.bounds
         
@@ -57,11 +73,11 @@ class UserViewController : UIViewController, AnyView, UITableViewDelegate, UITab
         errorLabel.center = view.center
     }
     
+    // MARK: - Update Methods
     func update(with users: [User]) {
         print("Got users: \(users)")
         DispatchQueue.main.async {
             self.errorLabel.isHidden = true
-            
             self.users = users
             self.usersTableView.reloadData()
             self.usersTableView.isHidden = false
@@ -73,7 +89,6 @@ class UserViewController : UIViewController, AnyView, UITableViewDelegate, UITab
         DispatchQueue.main.async {
             self.users = []
             self.usersTableView.isHidden = true
-            
             self.errorLabel.text = error
             self.errorLabel.isHidden = false
         }
@@ -88,5 +103,21 @@ class UserViewController : UIViewController, AnyView, UITableViewDelegate, UITab
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         cell.textLabel?.text = users[indexPath.row].name
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // Present alert when a user is selected
+        let selectedUser = users[indexPath.row]
+        presentUserAlert(for: selectedUser)
+    }
+    
+    // MARK: - Alert Method
+    private func presentUserAlert(for user: User) {
+        let alertController = UIAlertController(title: "User Selected",
+                                                message: "You selected: \(user.name)",
+                                                preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(okAction)
+        present(alertController, animated: true, completion: nil)
     }
 }

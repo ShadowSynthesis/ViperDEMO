@@ -113,10 +113,10 @@
 				5D8B463A2C78A9D900460843 /* Assets.xcassets */,
 				5D8B463C2C78A9D900460843 /* LaunchScreen.storyboard */,
 				5D8B463F2C78A9D900460843 /* Info.plist */,
-				5D8B46632C78AA0800460843 /* Entity.swift */,
-				5D8B46652C78AA1100460843 /* Presenter.swift */,
-				5D8B46672C78AA1C00460843 /* Interactor.swift */,
 				5D8B46692C78AA2500460843 /* View.swift */,
+				5D8B46672C78AA1C00460843 /* Interactor.swift */,
+				5D8B46652C78AA1100460843 /* Presenter.swift */,
+				5D8B46632C78AA0800460843 /* Entity.swift */,
 				5D8B46612C78A9FC00460843 /* Router.swift */,
 			);
 			path = ViperDEMO;
