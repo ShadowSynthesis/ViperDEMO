@@ -33,7 +33,7 @@ class UserPresenter : AnyPresenter {
         switch result {
         case .success(let users):
             view?.update(with: users)
-        case .failure(let error):
+        case .failure(_):
             view?.update(with: "Something went wrong")
         }
     }
