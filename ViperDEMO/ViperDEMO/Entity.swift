@@ -20,7 +20,3 @@ struct User: Codable {
     let phone: String
     let website: String
 }
-
-enum FetchError: Error {
-    case failed
-}

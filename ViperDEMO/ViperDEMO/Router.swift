@@ -7,42 +7,36 @@
 
 import UIKit
 
-typealias EntryPoint = AnyView & UIViewController
+typealias EntryPoint = UIViewController & AnyView
 
-// Every module/feature has a Router.
-// Creates all VIPER components.
-// Entry point for every module/feature.
 protocol AnyRouter {
-    var entry: EntryPoint? { get }
-    
+    var navigationController: UINavigationController? { get }
     static func start() -> AnyRouter
 }
 
-class UserRouter : AnyRouter {
-    var entry: EntryPoint?
-    
+class UserRouter: AnyRouter {
+    var navigationController: UINavigationController?
+
     static func start() -> AnyRouter {
         let router = UserRouter()
-        
-        // Set up View, Interactor, Presenter
-        var view: AnyView = UserViewController()
+
+        // Set up VIPER components
+        let viewController = UserViewController()
         var presenter: AnyPresenter = UserPresenter()
         var interactor: AnyInteractor = UserInteractor()
-        
-        view.presenter = presenter
-        
+
+        // Set up relations between VIPER components
+        viewController.presenter = presenter
         interactor.presenter = presenter
-        
-        presenter.view = view
+        presenter.view = viewController
         presenter.interactor = interactor
         presenter.router = router
-        
-        // Set up Router
-        router.entry = view as? EntryPoint
-        
+
+        // Set up UINavigationController
+        let navigationController = UINavigationController(rootViewController: viewController)
+        router.navigationController = navigationController
+
         return router
     }
-    
-    
 }
 
